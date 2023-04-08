@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>React Uncover</title>
+</head>
+
+<body>
+  <h1>Belajar JavaScript</h1>
+
+  <script>
+    let foo = { judul: "Belajar React" };
+    let bar = foo;
+    console.log(foo);            // { judul: 'Belajar React' }
+    console.log(bar);            // { judul: 'Belajar React' }
+
+    bar.judul = "Belajar React State";
+    console.log(foo);            // { judul: 'Belajar React State' }
+    console.log(bar);            // { judul: 'Belajar React State' }
+
+    console.log(foo === bar)     // true
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>React Uncover</title>
+  <style>
+    #root {
+      display: flex;
+      justify-content: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .container {
+      margin-top: 1rem;
+      padding: 2rem 3rem;
+      box-shadow: 8px 8px 0px black;
+      border: 2px solid black;
+    }
+
+    .container div {
+      padding-bottom: 0.6rem;
+    }
+
+
+    label {
+      display: block;
+    }
+
+    input[type="text"],
+    input[type="email"] {
+      width: 230px;
+      font-size: 1rem;
+      padding: 5px;
+      margin: 5px 0;
+    }
+
+    input[type="submit"] {
+      background-color: white;
+      cursor: pointer;
+      padding: 10px 20px;
+      font-weight: bold;
+      border: 1px solid gray;
+      box-shadow: 2px 2px 2px black;
+      margin: 10px 0;
+    }
+
+    input[type="submit"]:hover {
+      box-shadow: 1px 1px 1px black;
+      background-color: #f1f1f1;
+    }
+
+    small {
+      display: block;
+      color: red;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script src="js/react.development.js"></script>
+  <script src="js/react-dom.development.js"></script>
+  <script src="js/babel.js"></script>
+  <script type="text/babel">
+
+    const MyApp = () => {
+      const [username, setUsername] = React.useState("");
+      const [email, setEmail] = React.useState("");
+      const [errors, setErrors] = React.useState({ username: "", email: "" });
+
+      const handleUsernameChange = (event) => {
+        setUsername(event.target.value)
+      }
+
+      const handleEmailChange = (event) => {
+        setEmail(event.target.value)
+      }
+
+      const handleSubmit = (event) => {
+        event.preventDefault();
+        let pesanErrors = {};
+
+        // validasi username
+        if (!username.trim()) {
+          pesanErrors.username = "Username tidak boleh kosong";
+        }
+        else if (username.length < 6) {
+          pesanErrors.username = "Username minimal 6 karakter";
+        }
+        else {
+          pesanErrors.username = "";
+        }
+
+        // validasi email
+        if (!email) {
+          pesanErrors.email = "Email tidak boleh kosong";
+        }
+        else if ((!/\S+@\S+\.\S+/.test(email))) {
+          pesanErrors.email = "Email tidak valid";
+        }
+        else {
+          pesanErrors.email = "";
+        }
+
+        // update error state
+        setErrors(pesanErrors);
+
+        // cek apakah seluruh form valid atau masih ada error
+        let formValid = true;
+        for (let propName in pesanErrors) {
+          if (pesanErrors[propName].length > 0) {
+            formValid = false;
+          }
+        }
+
+        // proses data jika form valid
+        if (formValid) {
+          console.log(formValid)
+          alert("Username dan Email valid")
+        }
+      }
+
+      return (
+        <div className="container">
+          <form onSubmit={handleSubmit} noValidate>
+
+            <div>
+              <label htmlFor="username">Username </label>
+              <input
+                type="text" id="username" name="username"
+                value={username}
+                onChange={handleUsernameChange} />
+              {errors.username && <small>{errors.username}</small>}
+            </div>
+
+            <div>
+              <label htmlFor="email">Email </label>
+              <input
+                type="email" id="email" name="email"
+                value={email}
+                onChange={handleEmailChange} />
+              {errors.email && <small>{errors.email}</small>}
+
+            </div>
+
+            <input type="submit" style={{ marginTop: "10px" }} />
+          </form>
+        </div>
+      )
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<MyApp />);
+
+  </script>
+</body>
+
+</html>

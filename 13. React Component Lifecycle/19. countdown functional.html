@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React Uncover</title>
+    <style>
+      #root {
+        display: flex;
+        justify-content: center;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      h1 {
+        background-color: gainsboro;
+        font-size: 3em;
+        text-align: center;
+        padding: 10px 25px;
+        margin: 15px 0;
+      }
+
+      button {
+        background-color: white;
+        cursor: pointer;
+        padding: 10px 20px;
+        font-weight: bold;
+        border: 1px solid gray;
+        box-shadow: 2px 2px 2px black;
+        margin: 10px;
+      }
+
+      button:hover {
+        box-shadow: 1px 1px 1px black;
+        background-color: #f1f1f1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <script src="js/react.development.js"></script>
+    <script src="js/react-dom.development.js"></script>
+    <script src="js/babel.js"></script>
+    <script type="text/babel">
+      const Countdown = () => {
+        const [countdown, setCountdown] = React.useState(5);
+        const [run, setRun] = React.useState(false);
+        const [buttonName, setButtonName] = React.useState('Start');
+
+        const intervalID = React.useRef(null);
+
+        // componentDidMount (startup)
+        React.useEffect(() => {
+          intervalID.current = setInterval(() => {
+            setCountdown((prevState) => prevState - 1);
+          }, 1000);
+
+          setRun(true);
+          setButtonName('Pause');
+          console.log(`Startup | countdown: ${countdown}`);
+        }, []);
+
+        // componentDidUpdate (after render)
+        React.useEffect(() => {
+          if (countdown === 0) {
+            clearInterval(intervalID.current);
+          }
+          console.log(`After render | countdown: ${countdown}`);
+        });
+
+        // componentWillUnmount
+        React.useEffect(() => {
+          return () => {
+            console.log(`Cleanup | countdown: ${countdown}`);
+
+            clearInterval(intervalID.current);
+          };
+        }, []);
+
+        const handleButtonClick = () => {
+          if (run) {
+            clearInterval(intervalID.current);
+            setRun(false);
+            setButtonName('Continue');
+          } else {
+            intervalID.current = setInterval(() => {
+              setCountdown((prevState) => prevState - 1);
+            }, 1000);
+
+            setRun(true);
+            setButtonName('Pause');
+          }
+        };
+
+        return (
+          <div className="container">
+            <h1> {countdown} </h1>
+            <button onClick={handleButtonClick}>{buttonName}</button>
+          </div>
+        );
+      };
+
+      const MyApp = () => {
+        const [showcountdown, setShowcountdown] = React.useState(false);
+
+        const handleButtonClick = () => {
+          setShowcountdown((prevState) => !prevState);
+        };
+
+        return (
+          <div className="container">
+            <button onClick={handleButtonClick}>{showcountdown ? 'Hide countdown' : 'Show countdown'}</button>
+            {showcountdown && <Countdown />}
+          </div>
+        );
+      };
+
+      ReactDOM.createRoot(document.getElementById('root')).render(<MyApp />);
+    </script>
+  </body>
+</html>
